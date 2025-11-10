@@ -1,8 +1,30 @@
 """Smart Summarizer Flask application."""
-from flask import Flask, render_template, request
+from typing import Optional
 
-# Create the Flask application instance.
+from flask import Flask, render_template, request
+from openai import OpenAI, OpenAIError
+
+# Create the Flask application instance and OpenAI client.
 app = Flask(__name__)
+client = OpenAI()
+
+# Define the reusable system prompt for summarization.
+SYSTEM_PROMPT = "You are a helpful assistant that summarizes text clearly and concisely."
+
+
+def generate_summary(text: str) -> Optional[str]:
+    """Generate a summary of ``text`` using OpenAI's Chat Completions API."""
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": text},
+        ],
+        temperature=0.7,
+    )
+    message = response.choices[0].message
+    return message.content.strip() if message and message.content else None
 
 
 @app.route("/")
@@ -13,14 +35,17 @@ def index():
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
-    """Return a dummy summary for the submitted text."""
-    # Retrieve the text input from the form submission.
-    _ = request.form.get("text", "")
+    """Return an AI-generated summary for the submitted text."""
+    text = request.form.get("text", "").strip()
 
-    # In a real application, you would process `_` to generate a summary.
-    summary = "This is your summary."
+    if not text:
+        summary = "Error: Please provide text to summarize."
+    else:
+        try:
+            summary = generate_summary(text) or "Error: Unable to generate a summary."
+        except OpenAIError as exc:
+            summary = f"Error: Failed to generate summary ({exc})."
 
-    # Render the template with the summary message.
     return render_template("index.html", summary=summary)
 
 
