@@ -32,30 +32,7 @@
     <h1>Smart Summarizer</h1>
     <form action="{{ url_for('summarize') }}" method="post">
         <label for="text">Enter text to summarize:</label>
-        <textarea id="text" name="text" required>{{ original_text }}</textarea>
-
-        <label for="summary_type">Select summary type:</label>
-        <select id="summary_type" name="summary_type">
-            <option value="short" {% if selected_summary == 'short' %}selected{% endif %}>Short Summary (1–2 sentences)</option>
-            <option value="detailed" {% if selected_summary == 'detailed' %}selected{% endif %}>Detailed Summary</option>
-            <option value="bullet" {% if selected_summary == 'bullet' %}selected{% endif %}>Bullet Point Summary</option>
-            <option value="kid" {% if selected_summary == 'kid' %}selected{% endif %}>Kid-Friendly Summary</option>
-        </select>
-
-        <label for="target_language">Select output language:</label>
-        <select id="target_language" name="target_language">
-            <option value="English" {% if selected_language == 'English' %}selected{% endif %}>English</option>
-            <option value="Spanish" {% if selected_language == 'Spanish' %}selected{% endif %}>Spanish</option>
-            <option value="Hindi" {% if selected_language == 'Hindi' %}selected{% endif %}>Hindi</option>
-            <option value="Telugu" {% if selected_language == 'Telugu' %}selected{% endif %}>Telugu</option>
-            <option value="French" {% if selected_language == 'French' %}selected{% endif %}>French</option>
-        </select>
-
-        <label for="sentiment">
-            <input type="checkbox" id="sentiment" name="sentiment" {% if sentiment_enabled %}checked{% endif %}>
-            Include sentiment analysis (positive / neutral / negative)
-        </label>
-
+        <textarea id="text" name="text" required></textarea>
         <button type="submit">Summarize</button>
     </form>
 
@@ -63,10 +40,6 @@
     <div class="summary">
         <h2>Summary</h2>
         <p>{{ summary }}</p>
-        {% if sentiment %}
-        <h3>Sentiment</h3>
-        <p>{{ sentiment }}</p>
-        {% endif %}
     </div>
     {% endif %}
 </body>
