@@ -1,0 +1,8 @@
+/* Additional smoothing for theme transitions and focus outlines */
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
